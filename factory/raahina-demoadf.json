@@ -1,0 +1,9 @@
+{
+	"name": "raahina-demoadf",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2e6a7016-fb20-4bda-b669-19a4bc93387c",
+		"tenantId": "84e9e99e-9323-4616-8176-9e3f265dc485"
+	}
+}

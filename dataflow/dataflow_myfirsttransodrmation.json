@@ -1,0 +1,108 @@
+{
+	"name": "dataflow_myfirsttransodrmation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourcefirst",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourcefirst",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureBlobStorageforpractice",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "rank1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Year as integer,",
+				"          {State(s)} as string,",
+				"          {District(s)} as string,",
+				"          Season as string,",
+				"          {Crop(s)} as string,",
+				"          {Crop category} as string,",
+				"          Area as integer,",
+				"          {Area Units} as string,",
+				"          Production as integer,",
+				"          {Production Units} as integer,",
+				"          Yield as string,",
+				"          {Yield Units} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          Year as string,",
+				"          {State(s)} as string,",
+				"          {District(s)} as string,",
+				"          Season as string,",
+				"          {Crop(s)} as string,",
+				"          {Crop category} as string,",
+				"          Area as string,",
+				"          {Area Units} as string,",
+				"          Production as string,",
+				"          {Production Units} as string,",
+				"          Yield as string,",
+				"          {Yield Units} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source2",
+				"source1 select(mapColumn(",
+				"          Year,",
+				"          {District(s)},",
+				"          {Crop(s)},",
+				"          {Crop category},",
+				"          Area,",
+				"          Production,",
+				"          Yield",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 filter(greater(Production,10000)) ~> filter1",
+				"derivedColumn1 rank(asc({Crop(s)}, true),",
+				"     output(derivedcolumn as long),",
+				"     dense: true) ~> rank1",
+				"filter1 derive(column1 = {Crop(s)}) ~> derivedColumn1",
+				"rank1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     outputAssertFailedRows: true) ~> sink1"
+			]
+		}
+	}
+}

@@ -1,0 +1,102 @@
+{
+	"name": "dataflow_mostpurchasedcustomer",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sourcestorage_purchaseorder",
+						"type": "DatasetReference"
+					},
+					"name": "sourcepurchaseorder"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_sourcestorage_customer",
+						"type": "DatasetReference"
+					},
+					"name": "sourcecustomer"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Ds_sourcestorage_target",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "join1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          PurchaseOrderID as string,",
+				"          { CustomerCode} as string,",
+				"          ProductCode as string,",
+				"          EmployeeCode as string,",
+				"          { PuchaseOrderDate} as string,",
+				"          { Quantity} as integer,",
+				"          { UnitPrice} as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcepurchaseorder",
+				"source(output(",
+				"          CustomerCode as string,",
+				"          { CustomerName} as string,",
+				"          { Address} as string,",
+				"          { PhoneNumber} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcecustomer",
+				"sourcepurchaseorder select(mapColumn(",
+				"          PurchaseOrderID,",
+				"          { CustomerCode},",
+				"          ProductCode,",
+				"          { PuchaseOrderDate},",
+				"          { Quantity},",
+				"          { UnitPrice}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"sourcecustomer select(mapColumn(",
+				"          CustomerCode,",
+				"          { CustomerName},",
+				"          { Address},",
+				"          { PhoneNumber}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select1 filter(greater({ Quantity},0)) ~> filter1",
+				"filter1 derive(coast = multiply({ Quantity},{ UnitPrice})) ~> derivedColumn1",
+				"derivedColumn1, select2 join({ CustomerCode} == CustomerCode,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

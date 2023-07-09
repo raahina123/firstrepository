@@ -1,0 +1,71 @@
+{
+	"name": "ds_sourcefirst",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Agricultural-data.xlsx",
+				"container": "myfirstsourcecontainer"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Year",
+				"type": "String"
+			},
+			{
+				"name": "State(s)",
+				"type": "String"
+			},
+			{
+				"name": "District(s)",
+				"type": "String"
+			},
+			{
+				"name": "Season",
+				"type": "String"
+			},
+			{
+				"name": "Crop(s)",
+				"type": "String"
+			},
+			{
+				"name": "Crop category",
+				"type": "String"
+			},
+			{
+				"name": "Area",
+				"type": "String"
+			},
+			{
+				"name": "Area Units",
+				"type": "String"
+			},
+			{
+				"name": "Production",
+				"type": "String"
+			},
+			{
+				"name": "Production Units",
+				"type": "String"
+			},
+			{
+				"name": "Yield",
+				"type": "String"
+			},
+			{
+				"name": "Yield Units",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

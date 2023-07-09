@@ -1,0 +1,166 @@
+{
+	"name": "pl_sql_watermarkcopy_storedprocedure",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_oldwatermark",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT TableName,WatermarkValue FROM [dbo].[watermarktable] where TABLENAME = 'ORDERS'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable_watermark_target",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Lookup_Newwatermark",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT max(insertdatetime) as newvalue FROM [dbo].[orders]",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable_order_sourece",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy order_destination",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Lookup_oldwatermark",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Lookup_Newwatermark",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM\n [dbo].[orders] where Insertdatetime > '@{activity('Lookup_oldwatermark').output.firstRow.WatermarkValue}' and insertdatetime <= '@{activity('Lookup_Newwatermark').output.firstRow.newvalue}'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "AzureSqlTable_order_sourece",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSqlTable_order_target",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Stored procedure_WATERMRK",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy order_destination",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spSetWatermark]",
+					"storedProcedureParameters": {
+						"NewTime": {
+							"value": {
+								"value": "@activity('Lookup_Newwatermark').output.firstRow.newvalue",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						},
+						"TableName": {
+							"value": {
+								"value": "@activity('Lookup_oldwatermark').output.firstRow.WatermarkValue",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabasetarget",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-07-09T07:54:24Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

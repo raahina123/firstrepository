@@ -1,0 +1,81 @@
+{
+	"name": "pl_sqltablecopy_main",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_configuttiontable",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * FROM [dbo].[ConfigurationTable]",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable_order_target",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach_lookuptable",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup_configuttiontable",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_configuttiontable').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Execute Pipeline_earlycreated",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "pl_sql_watermarkcopy_storedprocedure_DYNAMICSLECTION_TABLES",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TABLENAME": {
+										"value": "@item().TableName",
+										"type": "Expression"
+									},
+									"INSERTDATETIME": {
+										"value": "@item().WWaterMarkColumn",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-07-09T10:04:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,24 @@
+{
+	"name": "triggerFOR COPY",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pl_copy",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 15,
+				"startTime": "2023-07-09T11:26:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
