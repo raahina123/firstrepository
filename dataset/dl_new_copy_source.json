@@ -1,0 +1,23 @@
+{
+	"name": "dl_new_copy_source",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_newlink_diffsubcrioption",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Crime-Rate-by-State.xlsx",
+				"container": "source"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

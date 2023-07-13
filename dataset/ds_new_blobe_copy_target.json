@@ -1,0 +1,25 @@
+{
+	"name": "ds_new_blobe_copy_target",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_newlink_diffsubcrioption",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@concat('raahina-',formatDateTime(utcNow(),'yyyy'))",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
