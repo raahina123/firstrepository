@@ -2,13 +2,12 @@
 	"name": "ds_sourcefirst",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "AzureBlobStorage_newlink_diffsubcrioption",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "sheet1",
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": "Agricultural-data.xlsx",
