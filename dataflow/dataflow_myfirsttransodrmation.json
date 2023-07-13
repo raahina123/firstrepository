@@ -5,17 +5,9 @@
 		"typeProperties": {
 			"sources": [
 				{
-					"dataset": {
-						"referenceName": "ds_sourcefirst",
-						"type": "DatasetReference"
-					},
 					"name": "source1"
 				},
 				{
-					"dataset": {
-						"referenceName": "ds_sourcefirst",
-						"type": "DatasetReference"
-					},
 					"name": "source2"
 				}
 			],
@@ -62,8 +54,7 @@
 				"          {Yield Units} as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
+				"     validateSchema: false) ~> source1",
 				"source(output(",
 				"          Year as string,",
 				"          {State(s)} as string,",
@@ -79,8 +70,7 @@
 				"          {Yield Units} as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source2",
+				"     validateSchema: false) ~> source2",
 				"source1 select(mapColumn(",
 				"          Year,",
 				"          {District(s)},",
