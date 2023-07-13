@@ -1,0 +1,9 @@
+{
+	"name": "raahinadatafactory",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b5ba0a36-63e5-408a-ae8e-65ce516a7df1",
+		"tenantId": "e595b750-348b-4112-9f79-605a0c793808"
+	}
+}
