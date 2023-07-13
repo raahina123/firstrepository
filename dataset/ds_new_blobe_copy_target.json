@@ -13,7 +13,8 @@
 				"folderPath": {
 					"value": "@concat('raahina-',formatDateTime(utcNow(),'yyyy'))",
 					"type": "Expression"
-				}
+				},
+				"container": "targetcontainer"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
