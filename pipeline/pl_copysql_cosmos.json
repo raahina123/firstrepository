@@ -1,0 +1,98 @@
+{
+	"name": "pl_copysql_cosmos",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy _sql_cosmos",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "CosmosDbSqlApiSink",
+						"writeBehavior": "insert"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "OrderID"
+								},
+								"sink": {
+									"path": "OrderID"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductID"
+								},
+								"sink": {
+									"path": "ProductID"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomerID"
+								},
+								"sink": {
+									"path": "id"
+								}
+							},
+							{
+								"source": {
+									"name": "UnitPrice"
+								},
+								"sink": {
+									"path": "UnitPrice"
+								}
+							},
+							{
+								"source": {
+									"name": "InsertDateTime"
+								},
+								"sink": {
+									"path": "InsertDateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "Quantity"
+								},
+								"sink": {
+									"path": "Quantity"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sql_order",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_cosmos_order",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
