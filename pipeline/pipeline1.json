@@ -50,13 +50,25 @@
 				"inputs": [
 					{
 						"referenceName": "ds_sa_source",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": {
+								"value": "@pipeline().parameters.file",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
 					{
 						"referenceName": "ds_sa_gen2_target",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": {
+								"value": "@pipeline().parameters.file",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
