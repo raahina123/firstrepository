@@ -1,0 +1,52 @@
+{
+	"name": "ds_youtbue_blob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blobeyotube",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Dataset1.csv",
+				"container": "source"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "VideoID",
+				"type": "String"
+			},
+			{
+				"name": "VideoTitle",
+				"type": "String"
+			},
+			{
+				"name": "Views",
+				"type": "String"
+			},
+			{
+				"name": "Likes",
+				"type": "String"
+			},
+			{
+				"name": "Dislikes",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "DurationinMinutes",
+				"type": "String"
+			}
+		]
+	}
+}
