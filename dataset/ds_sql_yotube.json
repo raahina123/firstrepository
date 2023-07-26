@@ -1,0 +1,51 @@
+{
+	"name": "ds_sql_yotube",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqlyoutube",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "videoid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "videotitle",
+				"type": "varchar"
+			},
+			{
+				"name": "videoviews",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "videolikes",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "videodislike",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "coment",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "dutationminuts",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "youtubetable"
+		}
+	}
+}
