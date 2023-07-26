@@ -175,7 +175,10 @@
 						"type": "AzureSqlSink",
 						"writeBehavior": "upsert",
 						"upsertSettings": {
-							"useTempDB": true
+							"useTempDB": true,
+							"keys": [
+								"videoid"
+							]
 						},
 						"sqlWriterUseTableLock": false,
 						"disableMetricsCollection": false
